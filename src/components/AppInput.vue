@@ -23,7 +23,8 @@ if (props.options.uppercase) {
 
 <template>
   <div class="input-wrapper">
-    <label>{{ title }}</label>
+    <span class="label">{{ title }}</span>
+    <span class="input-required" v-if="options.required">*</span>
     <div class="input-with-icon" v-if="options.icon">
       <img :src="options.icon" alt="icon" class="input-icon" />
       <input
@@ -40,17 +41,16 @@ if (props.options.uppercase) {
       :placeholder="options.placeholder"
       :type="options.type"
     />
-    <ErrorMessage v-if="errorMessage">{{ errorMessage }}</ErrorMessage>
+    <ErrorMessage v-model="errorMessage"></ErrorMessage>
   </div>
 </template>
 
 <style scoped lang="scss">
 .input-wrapper {
-  label {
+  .label {
     font-weight: 600;
     font-size: 14px;
     line-height: 129%;
-    display: block;
     margin-bottom: 6px;
   }
 }
@@ -94,5 +94,9 @@ input {
 
 input:hover {
   border-width: 1px;
+}
+
+.input-required {
+  color: var(--color-error);
 }
 </style>

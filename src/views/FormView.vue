@@ -66,7 +66,6 @@ const promoFormConfig: FormConfiguration = {
           id: 'promoPeriod',
           options: {
             type: 'date',
-            // Дополнительные настройки по твоему компоненту
             required: true,
           },
         },
@@ -130,7 +129,7 @@ const promoFormConfig: FormConfiguration = {
 
 const showForm = ref(false)
 
-const saveData = (data) => {
+const saveData = (data: object) => {
   console.log(data)
   showForm.value = false
 }

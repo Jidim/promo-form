@@ -20,15 +20,19 @@ const { value, errorMessage } = useField<string>(() => props.id, [], {
     <textarea
       v-model="value"
       :placeholder="options.placeholder"
-      :maxlength="options.maxLength || 250"
       class="multi-text--area"
     ></textarea>
     <div class="multi-text--footer">
-      <span v-if="options.maxLength" class="multi-text--counter"
+      <span
+        v-if="options.maxLength"
+        :class="{ error: value.length > options.maxLength }"
+        class="multi-text--counter"
         >{{ value.length }}/{{ options.maxLength }}</span
       >
     </div>
-    <ErrorMessage v-if="errorMessage">{{ errorMessage }}</ErrorMessage>
+    <Transition name="fade">
+      <ErrorMessage v-model="errorMessage"></ErrorMessage>
+    </Transition>
   </div>
 </template>
 
@@ -66,7 +70,9 @@ const { value, errorMessage } = useField<string>(() => props.id, [], {
     color: var(--color-gray-600);
   }
   &--counter {
-    /* стиль счетчика */
+    &.error {
+      color: var(--color-error);
+    }
   }
 }
 </style>

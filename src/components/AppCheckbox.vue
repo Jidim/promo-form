@@ -9,7 +9,6 @@ const props = defineProps<{
   id: string
 }>()
 
-// Для мультивыбора обычно value — массив строк
 const { value, errorMessage } = useField<string[]>(props.id, [], {
   initialValue: [],
 })
@@ -36,15 +35,15 @@ function onCheckboxChange(event: Event, optionValue: string) {
         <label>
           <input
             type="checkbox"
-            :value="option.value"
-            :checked="value.includes(option.value)"
+            :value="option.id"
+            :checked="value.includes(option.id)"
             @change="onCheckboxChange($event, option.id)"
           />
           {{ option.label }}
         </label>
       </div>
     </div>
-    <ErrorMessage v-if="errorMessage">{{ errorMessage }}</ErrorMessage>
+    <ErrorMessage v-model="errorMessage"></ErrorMessage>
   </fieldset>
 </template>
 
@@ -64,7 +63,6 @@ legend {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  /* Сброс стандартного оформления чекбокса */
   input[type='checkbox'] {
     -webkit-appearance: none;
     appearance: none;

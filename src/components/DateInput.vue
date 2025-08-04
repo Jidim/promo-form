@@ -132,7 +132,7 @@ function onNoEndDateChange(event: Event) {
   &--input-label {
     font-weight: 400;
     font-size: 12px;
-    line-height: 133%;
+    line-height: 100%;
     color: var(--color-gray-600);
   }
 
@@ -165,7 +165,7 @@ function onNoEndDateChange(event: Event) {
   &--time-input {
     font-weight: 500;
     font-size: 14px;
-    line-height: 129%;
+    line-height: 100%;
     background: var(--color-gray-100);
     border: none;
     text-align: left;
@@ -189,7 +189,7 @@ function onNoEndDateChange(event: Event) {
   }
 
   &--time-input {
-    padding: 16px 12px;
+    padding: 14px 12px;
     border-radius: 12px;
   }
 
