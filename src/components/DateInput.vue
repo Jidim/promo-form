@@ -106,7 +106,9 @@ function onNoEndDateChange(event: Event) {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: fit-content;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-gray-divider);
+  width: 100%;
 
   &--main-label {
     /* если нужно, можно стилизовать */
@@ -120,7 +122,7 @@ function onNoEndDateChange(event: Event) {
 
   &--inline-inputs {
     display: flex;
-    gap: 1px;
+    gap: 2px;
   }
 
   &--input-block {
@@ -199,6 +201,7 @@ function onNoEndDateChange(event: Event) {
     align-items: center;
     gap: 7px;
     font-size: 16px;
+    line-height: 1;
   }
 }
 

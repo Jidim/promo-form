@@ -46,6 +46,10 @@ const getComponent = (type: FieldType) => {
 const getBack = () => {
   if (currentStageIndex.value > 0) currentStageIndex.value--
 }
+
+const submitButtonText = computed(() =>
+  currentStageIndex.value < props.formModel.stages.length - 1 ? 'Далее' : 'Завершить'
+)
 </script>
 
 <template>
@@ -83,7 +87,7 @@ const getBack = () => {
     </section>
     <div class="form--actions">
       <AppButton variant="white" size="normal" type="button" @click="getBack">Назад</AppButton>
-      <AppButton variant="black" size="normal" type="submit">Далее</AppButton>
+      <AppButton variant="black" size="normal" type="submit">{{ submitButtonText }}</AppButton>
     </div>
   </Form>
 </template>
