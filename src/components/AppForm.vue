@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FieldType, FormConfiguration } from '@/types/form'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import AppInput from '@/components/AppInput.vue'
 import AppButton from '@/components/AppButton.vue'
 import { Form } from 'vee-validate'
@@ -18,7 +18,7 @@ let currentValues = {}
 const currentStageIndex = ref(0)
 const currentStage = computed(() => props.formModel.stages[currentStageIndex.value])
 
-function submitForm(values) {
+function submitForm(values: object) {
   currentValues = { ...currentValues, ...values }
 
   if (props.formModel.stages.length - 1 === currentStageIndex.value) {
@@ -50,15 +50,31 @@ const getBack = () => {
 const submitButtonText = computed(() =>
   currentStageIndex.value < props.formModel.stages.length - 1 ? 'Далее' : 'Завершить'
 )
+
+const stageBar = ref<HTMLDivElement | null>(null)
+const stageWidth = 217
+const visibleStages = 2
+
+watch(currentStageIndex, async (newIdx) => {
+  await nextTick()
+  if (stageBar.value) {
+    const lastIndex = props.formModel.stages.length - 1
+
+    let leftmostIdx = 0
+
+    if (newIdx === lastIndex && props.formModel.stages.length > visibleStages) {
+      leftmostIdx = lastIndex - visibleStages + 1
+    } else {
+      leftmostIdx = newIdx
+    }
+
+    stageBar.value.style.transform = `translateX(-${leftmostIdx * stageWidth}px)`
+  }
+})
 </script>
 
 <template>
-  <Form
-    class="form"
-    :key="currentStageIndex"
-    :validation-schema="currentStage.validationSchema"
-    @submit="submitForm"
-  >
+  <Form class="form" :validation-schema="currentStage.validationSchema" @submit="submitForm">
     <img
       class="form--close-button"
       @click="emits('close-form')"
@@ -66,13 +82,16 @@ const submitButtonText = computed(() =>
       alt="Закрыть"
     />
     <header class="form--title">{{ formModel.title }}</header>
-    <nav class="form--stage-bar">
-      <div
-        class="form--stage-bar--item"
-        :class="{ 'form--stage-bar--item--active': currentStageIndex == index }"
-        v-for="(stage, index) in formModel.stages"
-      >
-        {{ stage.title }}
+    <nav class="form--stage-bar-wrapper">
+      <div class="form--stage-bar" ref="stageBar">
+        <div
+          class="form--stage-bar--item"
+          :class="{ 'form--stage-bar--item--active': currentStageIndex === index }"
+          v-for="(stage, index) in formModel.stages"
+          :key="stage.title"
+        >
+          {{ stage.title }}
+        </div>
       </div>
     </nav>
     <section class="form--fields-container">
@@ -121,25 +140,6 @@ const submitButtonText = computed(() =>
     color: var(--color-gray-500);
   }
 
-  &--stage-bar {
-    display: flex;
-    flex-direction: row;
-    border-bottom: 1px solid var(--color-gray-border);
-    padding: 0 12px;
-
-    &--item {
-      width: 217px;
-      height: 34px;
-      text-align: center;
-      line-height: 2;
-
-      &--active {
-        color: var(--color-blue);
-        border-bottom: 2px solid var(--color-blue);
-      }
-    }
-  }
-
   &--fields-container {
     display: flex;
     flex-direction: column;
@@ -151,6 +151,33 @@ const submitButtonText = computed(() =>
     display: flex;
     flex-direction: row;
     gap: 12px;
+  }
+
+  &--stage-bar-wrapper {
+    width: 440px;
+    overflow-x: hidden;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--color-gray-border);
+  }
+
+  &--stage-bar {
+    display: flex;
+    flex-direction: row;
+    transition: transform 0.4s ease-in-out;
+    width: max-content;
+
+    &--item {
+      width: 217px;
+      height: 34px;
+      text-align: center;
+      line-height: 34px;
+      white-space: nowrap;
+
+      &--active {
+        color: var(--color-blue);
+        border-bottom: 2px solid var(--color-blue);
+      }
+    }
   }
 }
 </style>
